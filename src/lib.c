@@ -8,30 +8,25 @@ double step;
 
 double parallel_pi() {
   double pi = 0.0, num_threads;
-  double sum[THREAD_COUNT] = {};
 
   step = 1.0 / (double)num_steps;
   omp_set_num_threads(THREAD_COUNT);
 #pragma omp parallel
   {
     int i, id, nthrds;
-    double x, thread_sum;
+    double x, sum;
     nthrds = omp_get_num_threads();
     id = omp_get_thread_num();
 
     if (id == 0)
       num_threads = nthrds;
 
-    for (i = id, thread_sum = 0.0; i < num_steps; i = i + nthrds) {
+    for (i = id, sum = 0.0; i < num_steps; i = i + nthrds) {
       x = (i + 0.5) * step;
-      thread_sum += 4.0 / (1.0 + x * x);
+      sum += 4.0 / (1.0 + x * x);
     }
 #pragma omp atomic
-    sum[id] += thread_sum;
-  }
-
-  for (int i = 0; i < num_threads; i++) {
-    pi += sum[i] * step;
+    pi += sum * step;
   }
 
   return pi;
