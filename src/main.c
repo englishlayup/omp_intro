@@ -1,10 +1,10 @@
 #include <omp.h>
 #include <stdio.h>
 
-#define THREAD_COUNT 4
+#define THREAD_COUNT 12
 #define PAD 8
 
-static long num_steps = 100000;
+static long num_steps = 1e9;
 double step;
 
 double parallel_pi() {
@@ -54,11 +54,11 @@ int main() {
   pi = sequential_pi();
   end = omp_get_wtime();
   printf("Sequential pi = %f\n", pi);
-  printf("Took %f\n", (end - start) * 1e6);
+  printf("Took %f seconds\n", (end - start));
 
   start = omp_get_wtime();
   pi = parallel_pi();
   end = omp_get_wtime();
   printf("Parallel pi = %f\n", pi);
-  printf("Took %f\n", (end - start) * 1e6);
+  printf("Took %f seconds\n", (end - start));
 }
