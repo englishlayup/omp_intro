@@ -1,7 +1,7 @@
 #include <omp.h>
 #include <stdio.h>
 
-#define THREAD_COUNT 12
+#define THREAD_COUNT 4
 #define PAD 8
 
 static long num_steps = 100000;
