@@ -1,14 +1,15 @@
 #include <omp.h>
 #include <stdio.h>
 
-#define THREAD_COUNT 2
+#define THREAD_COUNT 12
+#define PAD 8
 
 static long num_steps = 100000;
 double step;
 
 double parallel_pi() {
   double pi, num_threads;
-  double sum[THREAD_COUNT] = {};
+  double sum[THREAD_COUNT][PAD];
 
   step = 1.0 / (double)num_steps;
   omp_set_num_threads(THREAD_COUNT);
@@ -22,14 +23,14 @@ double parallel_pi() {
     if (id == 0)
       num_threads = nthrds;
 
-    for (i = id, sum[id] = 0.0; i < num_steps; i = i + nthrds) {
+    for (i = id, sum[id][0] = 0.0; i < num_steps; i = i + nthrds) {
       x = (i + 0.5) * step;
-      sum[id] += 4.0 / (1.0 + x * x);
+      sum[id][0] += 4.0 / (1.0 + x * x);
     }
   }
 
   for (int i = 0; i < num_threads; i++) {
-    pi += sum[i] * step;
+    pi += sum[i][0] * step;
   }
 
   return pi;
