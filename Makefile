@@ -12,6 +12,9 @@ build-main: build-dir
 build-mandel: build-dir
 	$(CC) -fopenmp -lm -Wall -O0 -g -o build/mandel src/mandel.c
 
+build-linked: build-dir
+	$(CC) -fopenmp -lm -Wall -O0 -g -o build/linked src/linked.c
+
 .PHONY: check
 check:
 	@which $(CC) > /dev/null && echo "SUCCESS: $(CC) is installed" || echo "ERROR: $(CC) not found, please install clang"
