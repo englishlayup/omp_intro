@@ -15,6 +15,14 @@ build-mandel: build-dir
 build-linked: build-dir
 	$(CC) -fopenmp -lm -Wall -O0 -g -o build/linked src/linked.c
 
+build-linked-sol: build-dir
+	$(CC) -fopenmp -lm -Wall -O0 -g -o build/linked_sol src/linked_solution.c
+
+compare-solution-ex6: build-linked build-linked-sol
+	build/linked > linked.data
+	build/linked_sol > linked_sol.data
+	diff linked.data linked_sol.data || true
+
 .PHONY: check
 check:
 	@which $(CC) > /dev/null && echo "SUCCESS: $(CC) is installed" || echo "ERROR: $(CC) not found, please install clang"
