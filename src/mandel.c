@@ -23,11 +23,10 @@ struct d_complex {
   double i;
 };
 
-void testpoint(int *counter, struct d_complex point);
+void testpoint(struct d_complex point);
 
 struct d_complex c;
 int numoutside = 0;
-int *numoutside_ptr = &numoutside;
 omp_lock_t numoutside_lock;
 
 int main() {
@@ -44,7 +43,7 @@ int main() {
     for (j = 0; j < NPOINTS; j++) {
       c.r = -2.0 + 2.5 * (double)(i) / (double)(NPOINTS) + eps;
       c.i = 1.125 * (double)(j) / (double)(NPOINTS) + eps;
-      testpoint(numoutside_ptr, c);
+      testpoint(c);
     }
   }
   omp_destroy_lock(&numoutside_lock);
@@ -58,7 +57,7 @@ int main() {
   printf("Correct answer should be around 1.510659\n");
 }
 
-void testpoint(int *numoutside, struct d_complex point) {
+void testpoint(struct d_complex point) {
 
   // Does the iteration z=z*z+c, until |z| > 2 when point is known to be outside
   // set. If loop count reaches MAXITER, point is considered to be inside the
@@ -75,7 +74,7 @@ void testpoint(int *numoutside, struct d_complex point) {
     z.r = temp;
     if ((z.r * z.r + z.i * z.i) > 4.0) {
       omp_set_lock(&numoutside_lock);
-      (*numoutside)++;
+      numoutside++;
       omp_unset_lock(&numoutside_lock);
       break;
     }
