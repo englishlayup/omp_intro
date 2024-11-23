@@ -9,6 +9,9 @@ DBG = lldb
 build-main: build-dir
 	$(CC) -fopenmp -lm -Wall -O0 -g -o build/main src/main.c
 
+build-mandel: build-dir
+	$(CC) -fopenmp -lm -Wall -O0 -g -o build/mandel src/mandel.c
+
 .PHONY: check
 check:
 	@which $(CC) > /dev/null && echo "SUCCESS: $(CC) is installed" || echo "ERROR: $(CC) not found, please install clang"
@@ -37,3 +40,7 @@ debug: build-main
 .PHONY: debug-test
 debug-test: build-test
 	$(DBG) ./build/test
+
+.PHONY: perf-main
+perf-main: build-main
+	perf stat ./build/main
