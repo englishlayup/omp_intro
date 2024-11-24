@@ -10,13 +10,13 @@ build-main: build-dir
 	$(CC) -fopenmp -lm -Wall -O0 -g -o build/main src/main.c
 
 build-mandel: build-dir
-	$(CC) -fopenmp -lm -Wall -O0 -g -o build/mandel src/mandel.c
+	$(CC) -fopenmp -Wall -O0 -g -o build/mandel src/mandel.c
 
 build-linked: build-dir
-	$(CC) -fopenmp -lm -Wall -O0 -g -o build/linked src/linked.c
+	$(CC) -fopenmp -Wall -O0 -g -o build/linked src/linked.c
 
 build-linked-sol: build-dir
-	$(CC) -fopenmp -lm -Wall -O0 -g -o build/linked_sol src/linked_solution.c
+	$(CC) -fopenmp -Wall -O0 -g -o build/linked_sol src/linked_solution.c
 
 compare-solution-ex6: build-linked build-linked-sol
 	build/linked > linked.data
