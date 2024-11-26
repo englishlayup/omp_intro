@@ -14,7 +14,7 @@
 #endif
 #include <stdio.h>
 
-#define N 10000
+#define N 1e9
 
 /* Some random number constants from numerical recipies */
 #define SEED 2531
@@ -24,35 +24,45 @@
 int randy = SEED;
 
 /* function to fill an array with random numbers */
-void fill_rand(int length, double *a) {
+void fill_rand(int length, double *a, int *flag) {
   int i;
   for (i = 0; i < length; i++) {
     randy = (RAND_MULT * randy + RAND_ADD) % RAND_MOD;
     *(a + i) = ((double)randy) / ((double)RAND_MOD);
+    (*flag) = i;
+#pragma omp flush(a, flag)
   }
 }
 
 /* function to sum the elements of an array */
-double Sum_array(int length, double *a) {
+double Sum_array(int length, double *a, int *flag) {
   int i;
   double sum = 0.0;
-  for (i = 0; i < length; i++)
+  for (i = 0; i < length; i++) {
+    while (*flag < i) {
+    }
     sum += *(a + i);
+  }
   return sum;
 }
 
 int main() {
   double *A, sum, runtime;
-  int flag = 0;
+  int flag = -1;
 
   A = (double *)malloc(N * sizeof(double));
 
   runtime = omp_get_wtime();
 
-  fill_rand(N, A); // Producer: fill an array of data
+#pragma omp parallel
+#pragma omp single
+  {
+#pragma omp task
+    fill_rand(N, A, &flag); // Producer: fill an array of data
 
-  sum = Sum_array(N, A); // Consumer: sum the array
-
+#pragma omp task
+    sum = Sum_array(N, A, &flag); // Consumer: sum the array
+  }
   runtime = omp_get_wtime() - runtime;
 
   printf(" In %f seconds, The sum is %f \n", runtime, sum);
