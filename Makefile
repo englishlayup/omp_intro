@@ -18,6 +18,11 @@ build-linked: build-dir
 build-linked-sol: build-dir
 	$(CC) -fopenmp -Wall -O0 -g -o build/linked_sol src/linked_solution.c
 
+.PHONY: ex8
+ex8: build-dir
+	$(CC) -fopenmp -Wall -O0 -g -o build/ex8 src/prod_cons.c
+	./build/ex8
+
 compare-solution-ex6: build-linked build-linked-sol
 	build/linked > linked.data
 	build/linked_sol > linked_sol.data
