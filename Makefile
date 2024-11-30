@@ -23,6 +23,11 @@ ex8: build-dir
 	$(CC) -fopenmp -Wall -O0 -g -o build/ex8 src/prod_cons.c
 	./build/ex8
 
+.PHONY: ex9
+ex9: build-dir
+	$(CC) -fopenmp -Wall -O0 -g -o build/ex9 src/pi_mc.c src/random.c
+	./build/ex9
+
 compare-solution-ex6: build-linked build-linked-sol
 	build/linked > linked.data
 	build/linked_sol > linked_sol.data
